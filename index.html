@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Terminology Ladder</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+:root{color-scheme:light}
+html,body{min-height:100%}
+body{background:#3B6BAE;min-height:100vh;display:flex;flex-direction:column;color:#222}
+
+#bar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(0,0,0,0.16);flex-shrink:0}
+#prog-wrap{flex:1;height:6px;background:rgba(255,255,255,0.3);border-radius:3px;overflow:hidden}
+#prog{height:100%;width:0%;background:#fff;border-radius:3px;transition:width .3s}
+#lv{background:rgba(0,0,0,0.22);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+#restart{background:rgba(0,0,0,0.22);color:#fff;border:none;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer}
+
+#banner{background:#FFF4D6;color:#6B4E00;font-size:13px;font-weight:600;text-align:center;padding:7px 12px;display:none}
+#stage{flex:1;padding:12px;display:flex;flex-direction:column;align-items:center;gap:12px}
+#card{background:#fff;border-radius:16px;width:100%;max-width:520px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+
+#qhead{padding:20px 18px 12px;text-align:center}
+#badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.r1{background:#E1F5EE;color:#0F6E56}.r2{background:#FEF3E2;color:#854F0B}.r3{background:#FDEBF3;color:#9B2C5E}
+#term{font-size:24px;font-weight:700;color:#111;line-height:1.25}
+#qsub{font-size:13px;color:#888;margin-top:6px}
+
+#work{padding:14px 18px 18px;border-top:2px solid #eee;display:flex;flex-direction:column;gap:14px}
+.sentence{font-size:17px;line-height:2.1;color:#222}
+.gap{display:inline-block;min-width:96px;padding:0 10px;margin:0 2px;border-bottom:2px solid #3B6BAE;background:#EEF3FB;border-radius:6px 6px 0 0;text-align:center;font-weight:700;color:#1d3f75;cursor:pointer;line-height:1.7;vertical-align:baseline}
+.gap.empty{color:#9fb3d6;font-weight:400}
+.gap.ok{background:#d4edda;border-color:#28a745;color:#155724}
+.gap.bad{background:#f8d7da;border-color:#dc3545;color:#721c24}
+.gapin{font-size:16px;font-weight:700;width:9.5em;max-width:46vw;padding:2px 8px;border:none;border-bottom:2px solid #3B6BAE;background:#EEF3FB;border-radius:6px 6px 0 0;color:#1d3f75;text-align:center;outline:none;-webkit-appearance:none}
+.gapin:focus{background:#E1EAF8}
+.gapin.ok{background:#d4edda;border-color:#28a745;color:#155724}
+.gapin.bad{background:#f8d7da;border-color:#dc3545;color:#721c24}
+.bank{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{background:#f0f0f0;border:1.5px solid #d6d6d6;border-radius:20px;padding:9px 16px;font-size:15px;font-weight:600;color:#333;cursor:pointer}
+.chip:active{background:#e2e2e2}
+.chip[disabled]{opacity:.3;cursor:default}
+textarea{width:100%;min-height:96px;font-size:16px;line-height:1.45;padding:10px 12px;border:2px solid #ddd;border-radius:10px;resize:vertical;font-family:inherit;color:#222;outline:none}
+textarea:focus{border-color:#3B6BAE}
+.hint{font-size:12px;color:#888;text-align:center}
+.primary{background:#2F5A96;color:#fff;border:none;border-radius:10px;padding:13px;font-size:16px;font-weight:700;width:100%;cursor:pointer;-webkit-appearance:none}
+.primary[disabled]{opacity:.4;cursor:default}
+.ideas{display:flex;flex-direction:column;gap:6px}
+.idea{display:flex;gap:8px;align-items:flex-start;font-size:14px;padding:6px 10px;border-radius:8px}
+.idea.hit{background:#d4edda;color:#155724}
+.idea.miss{background:#f8d7da;color:#721c24}
+.idea b{flex-shrink:0;width:1.1em;text-align:center}
+.sheet{background:#EEF3FB;border-left:4px solid #3B6BAE;border-radius:0 8px 8px 0;padding:10px 12px;font-size:15px;line-height:1.5;color:#1d2f4f}
+.sheet small{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6a7fa6;margin-bottom:3px}
+.override{background:none;border:none;color:#6a7fa6;font-size:12px;text-decoration:underline;cursor:pointer;align-self:center}
+
+#frow{padding:10px 14px;display:flex;align-items:flex-start;justify-content:space-between;min-height:48px;border-top:1px solid #eee;gap:8px}
+#fb-wrap{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+#fb{font-size:14px;font-weight:700}
+#fnote{font-size:13px;color:#555;line-height:1.5}
+.fbok{color:#155724}.fbbad{color:#721c24}
+#nxt{background:#2F5A96;color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;display:none;-webkit-appearance:none;flex-shrink:0;align-self:center}
+
+#stats{display:flex;border-top:1px solid #eee}
+.st{flex:1;text-align:center;padding:9px 2px;border-right:1px solid #eee}
+.st:last-child{border-right:none}
+.sv{font-size:17px;font-weight:700;color:#333}
+.sl{font-size:10px;color:#999;margin-top:2px}
+
+#done{display:none;flex-direction:column;align-items:center;padding:28px 18px;text-align:center;gap:6px}
+#done h2{font-size:22px;font-weight:700;color:#222}
+#done p{font-size:14px;color:#666;line-height:1.5;margin-bottom:12px}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-bottom:14px}
+.dc{background:#f5f5f5;border-radius:10px;padding:12px}
+.dv{font-size:22px;font-weight:700;color:#333}
+.dl{font-size:11px;color:#999;margin-top:2px}
+
+#ladder{width:100%;max-width:520px;background:rgba(255,255,255,0.12);border-radius:12px;padding:10px 12px;color:#fff}
+#ladder h3{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;opacity:.85;margin-bottom:8px}
+#rungs{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px 10px}
+.rung{display:flex;align-items:center;gap:6px;font-size:12px;min-width:0}
+.rung span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pips{display:flex;gap:2px;flex-shrink:0}
+.pip{width:9px;height:9px;border-radius:2px;background:rgba(255,255,255,0.25)}
+.pip.on{background:#fff}
+.rung.got .pip{background:#7EE2B8}
+.key{font-size:11px;opacity:.8;margin-top:8px}
+
+#confirm{display:none;gap:6px;align-items:center;color:#fff;font-size:12px;font-weight:600}
+#confirm button{border:none;border-radius:6px;padding:5px 9px;font-size:12px;font-weight:700;cursor:pointer}
+#confirm .yes{background:#dc3545;color:#fff}
+#confirm .no{background:rgba(255,255,255,0.85);color:#333}
+
+button:focus-visible,.gap:focus-visible,.chip:focus-visible{outline:3px solid #0f2a52;outline-offset:2px}
+</style>
+</head>
+<body>
+
+<div id="bar">
+  <div id="prog-wrap"><div id="prog"></div></div>
+  <div id="lv">0 / 15 got</div>
+  <button id="restart">↺ Start fresh</button>
+  <div id="confirm"><span>Wipe progress?</span><button class="yes" id="cyes">Wipe</button><button class="no" id="cno">Cancel</button></div>
+</div>
+<div id="banner"></div>
+
+<div id="stage">
+  <div id="card">
+    <div id="qhead">
+      <div id="badge" class="r1">Step 1 · Tap the gaps</div>
+      <div id="term">Getting ready…</div>
+      <div id="qsub"></div>
+    </div>
+    <div id="work"></div>
+    <div id="frow">
+      <div id="fb-wrap"><div id="fb"></div><div id="fnote"></div></div>
+      <button id="nxt">Next →</button>
+    </div>
+    <div id="stats">
+      <div class="st"><div class="sv" id="s-got">0</div><div class="sl">terms got</div></div>
+      <div class="st"><div class="sv" id="s-streak">0</div><div class="sl">streak 🔥</div></div>
+      <div class="st"><div class="sv" id="s-acc">—</div><div class="sl">accuracy</div></div>
+    </div>
+    <div id="done">
+      <div style="font-size:44px">🏆</div>
+      <h2>All 15 terms climbed!</h2>
+      <p>Come back tomorrow: any term you got today comes back for a quick Step 3 check-up. That gap between sessions is what makes it stick.</p>
+      <div class="dg">
+        <div class="dc"><div class="dv" id="d-right">0</div><div class="dl">right</div></div>
+        <div class="dc"><div class="dv" id="d-acc">—</div><div class="dl">accuracy</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ladder">
+    <h3>Your ladder</h3>
+    <div id="rungs"></div>
+    <div class="key">Each term climbs 3 steps: tap the gaps → type the gaps → write it from memory. Miss one and it drops back a step.</div>
+  </div>
+</div>
+
+<script>
+// Sem 2 Terminology Sheet — 15 terms, sheet wording.
+// gaps: two key words blanked in Steps 1–2 (in the order they appear in d)
+// bank: wrong words offered alongside the gaps in Step 1
+// ideas: key ideas checked in Step 3; each idea passes if any listed word/phrase appears (word starts are enough: "surviv" matches survive/survival)
+var TERMS=[
+  {t:"Mutation",d:"A permanent change in the DNA of an organism",gaps:["permanent","DNA"],bank:["temporary","protein","cell"],
+   ideas:[{l:"permanent",a:["permanent","lasting","irreversib","forever","stays"]},{l:"change",a:["chang","alter","modif","mistake","error"]},{l:"in the DNA",a:["dna","gene","genetic","chromosom","base"]}]},
+  {t:"Mutagen",d:"An agent that causes a mutation",gaps:["agent","mutation"],bank:["species","adaptation","enzyme"],
+   ideas:[{l:"an agent (something)",a:["agent","factor","substance","chemical","radiation","something","thing","uv","x ray"]},{l:"causes",a:["caus","make","trigger","lead","produc","increas","result","creat"]},{l:"a mutation",a:["mutat"]}],
+   note:"Examples: UV light, radiation, some chemicals."},
+  {t:"Variation",d:"The differences that exist between individuals or populations of species",gaps:["differences","individuals"],bank:["similarities","cells","ecosystems"],
+   ideas:[{l:"differences",a:["differen","vary","varies","variet","unique","not the same","not identical"]},{l:"between individuals or populations",a:["individual","organism","population","member","people","animal","species"]}]},
+  {t:"Human Genome Project",d:"An international project that aims to identify all the human genes and determine the sequence of the base pairs that make up chromosomes",gaps:["genes","sequence"],bank:["proteins","number","cells"],
+   ideas:[{l:"identify all the human genes",a:["gene","genome"]},{l:"sequence of the base pairs",a:["sequenc","order","base pair","bases","map","code"]}]},
+  {t:"Recombinant DNA technology",d:"Procedures used to produce DNA that has been modified by inserting DNA into a cell from a different organism",gaps:["inserting","different"],bank:["removing","same","copying"],
+   ideas:[{l:"DNA is modified",a:["dna","gene","genetic"]},{l:"by inserting / adding DNA",a:["insert","add","put","transfer","combin","splic","join","mov"]},{l:"from a different organism",a:["different","another","other","foreign","second"]}]},
+  {t:"Evolution",d:"Change in the characteristics of a species over many generations",gaps:["characteristics","generations"],bank:["habitat","years","individuals"],
+   ideas:[{l:"change",a:["chang","alter","develop","differ","adapt","evolv"]},{l:"in the characteristics of a species",a:["characteristic","trait","feature","species","population"]},{l:"over many generations",a:["generation","over time","long time","million","years","gradual"]}]},
+  {t:"Natural selection",d:"The process in which an environmental factor acts on a population and results in some organisms having more offspring that survive to reproduce than others",gaps:["environmental","offspring"],bank:["human","eggs","mutations"],
+   ideas:[{l:"an environmental factor (selection pressure)",a:["environment","pressure","selective agent","predat","factor","nature","disease","food","climate","surroundings"]},{l:"some organisms survive",a:["surviv","live","fittest","better adapted","well adapted","best adapted","suited"]},{l:"and have more offspring / reproduce",a:["offspring","reproduc","breed","pass on","passed on","pass their","young","babies","mate"]}]},
+  {t:"Adaptation",d:"A trait that helps an organism survive and reproduce in its environment",gaps:["trait","survive"],bank:["mutation","grow","choice"],
+   ideas:[{l:"a trait / feature",a:["trait","feature","characteristic","structur","behaviour","behavior","physiolog","ability"]},{l:"that helps",a:["help","allow","enabl","better","increas","suit","advantage","improv","let"]},{l:"survive and reproduce",a:["surviv","reproduc","live","thrive"]}]},
+  {t:"Selective agent",d:"An environmental factor that acts on a population during natural selection",gaps:["environmental","population"],bank:["genetic","individual","species"],
+   ideas:[{l:"an environmental factor",a:["environment","factor","predat","disease","food","climate","pressure","temperature","surroundings"]},{l:"acting during natural selection",a:["natural selection","select","population","surviv","affect","act"]}],
+   note:"Same thing as a selection pressure. Learn both names."},
+  {t:"Biodiversity",d:"The number and range of species that exist on Earth or in an ecosystem",gaps:["range","species"],bank:["size","genes","cells"],
+   ideas:[{l:"the number and range (variety)",a:["number","range","variet","amount","how many","divers","different","many"]},{l:"of species",a:["species","organism","living thing","life","animal","plant"]}]},
+  {t:"Artificial selection",d:"The process by which people choose to breed particular organisms with desirable features; also known as selective breeding",gaps:["people","desirable"],bank:["nature","random","natural"],
+   ideas:[{l:"people (humans) choose",a:["people","human","farmer","breeder","person","man made"]},{l:"to breed",a:["breed","select","choos","mate","pick","cross"]},{l:"for desirable features",a:["desir","want","useful","best","good","prefer","particular","specific","favour","favor","better"]}]},
+  {t:"Fossil",d:"Evidence of, or remains of, an organism that lived a long time ago",gaps:["remains","long"],bank:["pictures","short","recent"],
+   ideas:[{l:"evidence or remains",a:["remain","evidence","trace","imprint","preserv","bone","print","cast","mould","mold","impression","shell"]},{l:"of an organism from long ago",a:["long time","ago","ancient","past","prehistoric","million","extinct","old","lived"]}]},
+  {t:"Fossil record",d:"A list showing the classification of all the species on Earth that have been found as fossils",gaps:["classification","fossils"],bank:["age","living","eggs"],
+   ideas:[{l:"a list / classification of all species",a:["list","classif","catalog","all the species","all species","every species","database"]},{l:"found as fossils",a:["fossil"]}],
+   note:"This is the sheet's wording, so use it for the terminology section. When fossils come up as evidence for evolution, talk about them showing change over time."},
+  {t:"Species",d:"A group of similar individuals that can interbreed in natural conditions to produce fertile offspring",gaps:["interbreed","fertile"],bank:["compete","identical","healthy"],
+   ideas:[{l:"can interbreed",a:["interbreed","breed","mate","reproduc"]},{l:"to produce fertile offspring",a:["fertile"]}],
+   note:"'Fertile' is the word markers look for. Horses and donkeys can breed, but mules are infertile, so horses and donkeys are separate species."},
+  {t:"Speciation",d:"The process by which one species splits into two or more separate species",gaps:["splits","separate"],bank:["merges","similar","mutates"],
+   ideas:[{l:"one species splits",a:["split","divid","branch","separat","form","new","becom","turn into","evolv","diverg"]},{l:"into two or more species",a:["two","2","more","new species","separate species","different species","multiple","several"]}]}
+];
+TERMS.forEach(function(t,i){t.id=i;});
+
+// ── helpers ──
+function $(id){return document.getElementById(id);}
+function shuf(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function norm(s){return(" "+String(s).toLowerCase().replace(/[‘’']/g,"").replace(/[^a-z0-9]+/g," ").trim()+" ");}
+function lev(a,b){
+  var m=a.length,n=b.length,d=[],i,j;
+  for(i=0;i<=m;i++){d[i]=[i];}
+  for(j=0;j<=n;j++){d[0][j]=j;}
+  for(i=1;i<=m;i++)for(j=1;j<=n;j++){d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));}
+  return d[m][n];
+}
+// does normalised text contain this alternative? (word-start match, small typo allowed on longer words)
+function hasAlt(text,alt){
+  var a=norm(alt).trim();
+  if(a.indexOf(" ")>-1)return text.indexOf(" "+a)>-1;
+  var words=text.trim().split(" ");
+  for(var k=0;k<words.length;k++){
+    var w=words[k];
+    if(w.indexOf(a)===0)return true;
+    if(a.length>=5&&w.length>=a.length-1){
+      for(var L=a.length-1;L<=a.length+1;L++){if(lev(w.slice(0,L),a)<=1)return true;}
+    }
+  }
+  return false;
+}
+function sameWord(typed,target){
+  var x=typed.trim().toLowerCase(),y=target.toLowerCase();
+  if(x===y)return "exact";
+  if(y.length>=5&&lev(x,y)<=1)return "close";
+  if(y.length>=9&&lev(x,y)<=2)return "close";
+  return "";
+}
+
+// ── saved progress ──
+var KEY="terms-ladder-v1";
+function today(){var d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function blank(){var p={terms:{},right:0,tries:0};TERMS.forEach(function(t){p.terms[t.id]={rung:1,got:false,on:""};});return p;}
+var P=blank();
+try{var raw=localStorage.getItem(KEY);if(raw){var saved=JSON.parse(raw);if(saved&&saved.terms)P=saved;}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P));}catch(e){}}
+
+// spaced check-up: terms got on an earlier day come back at Step 3
+var reviewCount=0;
+TERMS.forEach(function(t){var s=P.terms[t.id];if(s&&s.got&&s.on&&s.on!==today()){s.got=false;s.rung=3;reviewCount++;}});
+save();
+if(reviewCount){$("banner").textContent="Check-up: "+reviewCount+" term"+(reviewCount>1?"s":"")+" you got on an earlier day "+(reviewCount>1?"are":"is")+" back for a quick Step 3 test.";$("banner").style.display="block";}
+
+// ── session ──
+var deck=[],cur=null,answered=false,streak=0;
+function buildDeck(){deck=shuf(TERMS.filter(function(t){return !P.terms[t.id].got;}).slice());}
+function requeue(t){var pos=Math.min(3,deck.length);deck.splice(pos,0,t);}
+
+var RUNG_LABEL={1:"Step 1 · Tap the gaps",2:"Step 2 · Type the gaps",3:"Step 3 · Write it from memory"};
+var RUNG_SUB={1:"Tap a word to fill the next gap. Tap a filled gap to clear it.",2:"Type the missing words. The first letter is given.",3:"Type the definition. Key words are fine."};
+
+function next(){
+  answered=false;
+  $("nxt").style.display="none";$("fb").textContent="";$("fb").className="";$("fnote").textContent="";
+  if(!deck.length){showDone();return;}
+  cur=deck.shift();
+  var r=P.terms[cur.id].rung;
+  $("badge").className="r"+r;$("badge").textContent=RUNG_LABEL[r];
+  $("term").textContent=cur.t;$("qsub").textContent=RUNG_SUB[r];
+  if(r===1)step1();else if(r===2)step2();else step3();
+  render();
+}
+
+function parts(){ // split definition around the two gap words, in order
+  var out=[],rest=cur.d;
+  cur.gaps.forEach(function(g){
+    var re=new RegExp("\\b"+g.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"\\b");
+    var m=rest.match(re);var i=m?m.index:-1;
+    out.push(rest.slice(0,i));rest=rest.slice(i+g.length);
+  });
+  out.push(rest);return out;
+}
+
+// Step 1: tap-to-fill word bank
+var filled=[];
+function step1(){
+  filled=[null,null];
+  var words=shuf(cur.gaps.concat(cur.bank).slice());
+  var w=$("work");
+  w.innerHTML='<div class="sentence" id="sent"></div><div class="bank" id="bank"></div><button class="primary" id="check1" disabled>Check ✓</button>';
+  var bank=$("bank");
+  words.forEach(function(word){
+    var b=document.createElement("button");b.className="chip";b.textContent=word;
+    b.addEventListener("click",function(){
+      if(answered)return;
+      var slot=filled[0]===null?0:(filled[1]===null?1:-1);
+      if(slot<0)return;
+      filled[slot]={word:word,btn:b};b.disabled=true;drawSentence1();
+    });
+    bank.appendChild(b);
+  });
+  $("check1").addEventListener("click",function(){
+    if(answered||filled[0]===null||filled[1]===null)return;
+    var ok=[filled[0].word===cur.gaps[0],filled[1].word===cur.gaps[1]];
+    drawSentence1(ok);
+    finish(ok[0]&&ok[1],ok[0]&&ok[1]?"":"The gaps were: "+cur.gaps.join(" and ")+".");
+  });
+  drawSentence1();
+}
+function drawSentence1(ok){
+  var p=parts(),s=$("sent");s.innerHTML="";
+  p.forEach(function(txt,i){
+    s.appendChild(document.createTextNode(txt));
+    if(i<2){
+      var g=document.createElement("span");g.tabIndex=0;g.setAttribute("role","button");
+      var f=filled[i];
+      g.className="gap"+(f?"":" empty")+(ok?(ok[i]?" ok":" bad"):"");
+      g.textContent=f?f.word:"tap a word";
+      g.setAttribute("aria-label",f?"Gap "+(i+1)+": "+f.word+". Tap to clear.":"Gap "+(i+1)+", empty");
+      var clear=function(){if(answered||!filled[i])return;filled[i].btn.disabled=false;filled[i]=null;drawSentence1();};
+      g.addEventListener("click",clear);
+      g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();clear();}});
+      s.appendChild(g);
+    }
+  });
+  $("check1").disabled=!(filled[0]&&filled[1]);
+}
+
+// Step 2: typed gaps with a first-letter hint
+function step2(){
+  var p=parts(),html='<div class="sentence">';
+  p.forEach(function(txt,i){
+    html+=esc(txt);
+    if(i<2){var g=cur.gaps[i];html+='<input class="gapin" id="g'+i+'" type="text" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="'+esc(g[0]+" "+"_ ".repeat(g.length-1).trim())+'" aria-label="Gap '+(i+1)+', starts with '+esc(g[0])+'">';}
+  });
+  html+='</div><button class="primary" id="check2">Check ✓</button>';
+  $("work").innerHTML=html;
+  var g0=$("g0"),g1=$("g1");
+  g0.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();g1.focus();}});
+  g1.addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();check2();}});
+  $("check2").addEventListener("click",check2);
+  setTimeout(function(){try{g0.focus();}catch(e){}},50);
+}
+function check2(){
+  if(answered)return;
+  var ins=[$("g0"),$("g1")];
+  if(!ins[0].value.trim()||!ins[1].value.trim())return;
+  var res=ins.map(function(el,i){return sameWord(el.value,cur.gaps[i]);});
+  var spelling=[];
+  ins.forEach(function(el,i){
+    el.disabled=true;el.className="gapin "+(res[i]?"ok":"bad");
+    if(res[i]==="close")spelling.push(cur.gaps[i]);
+    if(!res[i])el.value=cur.gaps[i];
+  });
+  $("check2").disabled=true;
+  var ok=!!(res[0]&&res[1]);
+  var note=ok?(spelling.length?"Accepted. Check the spelling: "+spelling.join(", ")+".":""):"The gaps were: "+cur.gaps.join(" and ")+".";
+  finish(ok,note);
+}
+
+// Step 3: free recall, checked against key ideas
+function step3(){
+  $("work").innerHTML='<textarea id="recall" placeholder="Type the definition of '+esc(cur.t.toLowerCase())+'…" aria-label="Your definition"></textarea><div class="hint">Telegraph style is fine, e.g. “permanent change, DNA”.</div><button class="primary" id="check3">Check ✓</button>';
+  $("check3").addEventListener("click",check3);
+  setTimeout(function(){try{$("recall").focus();}catch(e){}},50);
+}
+function check3(){
+  if(answered)return;
+  var ta=$("recall"),txt=ta.value;
+  if(!txt.trim())return;
+  var n=norm(txt);
+  var hits=cur.ideas.map(function(idea){return idea.a.some(function(alt){return hasAlt(n,alt);});});
+  var all=hits.every(Boolean);
+  ta.disabled=true;$("check3").remove();
+  var box=document.createElement("div");box.className="ideas";
+  cur.ideas.forEach(function(idea,i){
+    var d=document.createElement("div");d.className="idea "+(hits[i]?"hit":"miss");
+    d.innerHTML="<b>"+(hits[i]?"✓":"✗")+"</b><span>"+esc(idea.l)+"</span>";box.appendChild(d);
+  });
+  var sheet=document.createElement("div");sheet.className="sheet";
+  sheet.innerHTML="<small>Terminology sheet</small>"+esc(cur.d);
+  var w=$("work");w.appendChild(box);w.appendChild(sheet);
+  if(!all){
+    var ov=document.createElement("button");ov.className="override";ov.textContent="My wording had every idea, count it";
+    ov.addEventListener("click",function(){ov.remove();box.querySelectorAll(".miss").forEach(function(m){m.className="idea hit";m.querySelector("b").textContent="✓";});regrade(true);});
+    w.appendChild(ov);
+  }
+  finish(all,all?"Now say it out loud as one full sentence before you hit Next.":"Compare with the sheet, then it's back to Step 2 for this one.");
+}
+
+var lastOk=null;
+function finish(ok,note){
+  answered=true;lastOk=ok;
+  P.tries++;
+  var s=P.terms[cur.id],wasRung=s.rung;
+  if(ok){
+    P.right++;streak++;
+    if(s.rung>=3){s.got=true;s.on=today();}else{s.rung++;requeue(cur);}
+  } else {
+    streak=0;s.rung=Math.max(1,s.rung-1);requeue(cur);
+  }
+  save();
+  var fb=$("fb");
+  if(ok){fb.textContent=s.got?"✓ Got it! "+cur.t+" is off the ladder.":(streak>=3?"✓ "+streak+" in a row! Up a step.":"✓ Correct, up a step.");fb.className="fbok";}
+  else{fb.textContent="✗ Not yet, down a step.";fb.className="fbbad";}
+  $("fnote").textContent=[note,wasRung===3&&cur.note?cur.note:""].filter(Boolean).join(" ");
+  $("nxt").style.display="block";
+  render();
+  setTimeout(function(){try{$("nxt").focus({preventScroll:true});}catch(e){}},30);
+}
+// override on Step 3: undo the miss and record a pass
+function regrade(){
+  if(lastOk)return;
+  var s=P.terms[cur.id];
+  var i=deck.indexOf(cur);if(i>-1)deck.splice(i,1);
+  P.right++;streak++;s.rung=3;s.got=true;s.on=today();lastOk=true;
+  save();
+  $("fb").textContent="✓ Counted. "+cur.t+" is off the ladder.";$("fb").className="fbok";
+  $("fnote").textContent="Now say it out loud as one full sentence before you hit Next."+(cur.note?" "+cur.note:"");
+  render();
+}
+
+function render(){
+  var got=0,steps=0;
+  TERMS.forEach(function(t){var s=P.terms[t.id];if(s.got){got++;steps+=3;}else steps+=s.rung-1;});
+  $("lv").textContent=got+" / 15 got";
+  $("prog").style.width=Math.round(steps/45*100)+"%";
+  $("s-got").textContent=got;$("s-streak").textContent=streak;
+  $("s-acc").textContent=P.tries?Math.round(P.right/P.tries*100)+"%":"—";
+  var r=$("rungs");r.innerHTML="";
+  TERMS.forEach(function(t){
+    var s=P.terms[t.id],row=document.createElement("div");
+    row.className="rung"+(s.got?" got":"");
+    var pips='<div class="pips">';
+    for(var k=1;k<=3;k++){pips+='<div class="pip'+(s.got||k<s.rung?" on":"")+'"></div>';}
+    row.innerHTML=pips+'</div><span>'+esc(t.t)+'</span>';
+    row.title=s.got?"Got it":"On step "+s.rung;
+    r.appendChild(row);
+  });
+}
+
+function showDone(){
+  ["qhead","work","frow"].forEach(function(id){$(id).style.display="none";});
+  $("done").style.display="flex";
+  $("d-right").textContent=P.right;
+  $("d-acc").textContent=P.tries?Math.round(P.right/P.tries*100)+"%":"—";
+  $("prog").style.width="100%";
+}
+
+$("nxt").addEventListener("click",next);
+$("restart").addEventListener("click",function(){$("restart").style.display="none";$("confirm").style.display="flex";});
+$("cno").addEventListener("click",function(){$("confirm").style.display="none";$("restart").style.display="";});
+$("cyes").addEventListener("click",function(){
+  P=blank();save();streak=0;
+  $("confirm").style.display="none";$("restart").style.display="";$("banner").style.display="none";
+  ["qhead","work","frow"].forEach(function(id){$(id).style.display="";});
+  $("done").style.display="none";
+  buildDeck();next();
+});
+
+buildDeck();next();
+</script>
+</body>
+</html>
